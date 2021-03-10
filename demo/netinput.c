@@ -1,10 +1,7 @@
-
-
 #include <input_manager.h>
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
-#include <string.h>
-#include <sys/socket.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -18,8 +15,8 @@
 
 #define SERVER_PORT 8888
 
-static int g_iSocketServer;
-static int iSocketClient;
+int g_iSocketServer;
+int iSocketClient;
 
 static int NetinputGetInputEvent(PInputEvent ptInputEvent)
 {
@@ -37,8 +34,10 @@ static int NetinputGetInputEvent(PInputEvent ptInputEvent)
 	{
 		aRecvBuf[iRecvLen] = '\0';
 		printf("Get Msg From %s : %s\n", inet_ntoa(tSocketClientAddr.sin_addr), aRecvBuf);
+		
 		ptInputEvent->iType 	= INPUT_TYPE_NET;
 		gettimeofday(&ptInputEvent->tTime, NULL);
+		
 		strncpy(ptInputEvent->str, aRecvBuf, 1000);
 		ptInputEvent->str[999] = '\0';
 		return 0;
