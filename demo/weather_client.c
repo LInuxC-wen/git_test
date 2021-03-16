@@ -37,7 +37,7 @@ int weather(void)
   // 第3步：与服务端通信，发送一个报文后等待回复，然后再发下一个报文。
     int iret;
     memset(buffer,0,sizeof(buffer));
-    sprintf(buffer,"GET http://api.yytianqi.com/observe?city=123.113.202.176&key=53fojkolhat2vf72\r\n");
+    sprintf(buffer,"GET http://api.yytianqi.com/observe?city=CH280101&key=53fojkolhat2vf72\n");
     if ( (iret=send(sockfd,buffer,strlen(buffer),0))<=0) // 向服务端发送请求报文。
     { perror("send"); }
     printf("发送：%s\n",buffer);

@@ -4,6 +4,8 @@
 #include "bmp.h"
 #include "chat.h"
 #include "weather_client.h"
+#include "input_manager.h"
+#include "font_test.h"
 
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -16,11 +18,13 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <input_manager.h>
+
 
 static InputEvent event;
 extern int g_iSocketServer;//与MCU通信的服务端句柄
 extern int iSocketClient;//与MCU通信的客户端句柄
+extern char getmcubuffer[1000];//与MCU通信收到的信息
+int touch_clear();//触摸屏数据初始化
 
 void *thread_input (void *data) //thread_input线程
 {
@@ -69,14 +73,15 @@ int main (void)
 	int ret;
 	char sendBuf[1000];
 	pthread_t tid_input;
-	LCD_bmp("main.bmp");
-	
 	ret =  pthread_create(&tid_input, NULL,thread_input, NULL);//创建thread_ts线程
+	
+	LCD_bmp("main.bmp");//主界面
 	while(1)
-	{
+	{	
 		if(50<event.iX&& event.iX<360 && 70<event.iY && event.iY<180)//LED灯开
 		{
-			if(event.str!=0)
+			touch_clear();
+			if(iSocketClient!=0)
 			{
 				strcpy(sendBuf,LED_on);
 				ret = send(iSocketClient,sendBuf,999,0);
@@ -85,19 +90,74 @@ int main (void)
 				 printf("发送：%s\n",sendBuf);
 			}
 		printf("led on\n");
-		return 0;
 		}
-		else if(50<event.iX&& event.iX<360 && 210<event.iY && event.iY<320)
+		else if(50<event.iX&& event.iX<360 && 210<event.iY && event.iY<320)//LED灯关
 		{
+			touch_clear();
+			if(iSocketClient!=0)
+			{
+				strcpy(sendBuf,LED_off);
+				ret = send(iSocketClient,sendBuf,999,0);
+				if(ret<=0)
+					 { perror("send"); break; }
+				printf("发送：%s\n",sendBuf);
+			}
 		printf("led off\n");
-		return 0;
 		}
 		
 		else if(50<event.iX&& event.iX<360 && 360<event.iY && event.iY<465)//天气预报
 		{
+		touch_clear();
+		LCD_bmp("weather.bmp");
 		ret = weather();
-		return 0;
+			while(1)
+			{
+			if(800<event.iX&& event.iX<1024 && 500<event.iY && event.iY<600)//退出
+			{
+				touch_clear();
+				LCD_bmp("main.bmp");//主界面
+				break;
+			}
+			}
+		}
+		
+		else if(520<event.iX&& event.iX<800 && 60<event.iY && event.iY<180)//室内温湿度
+		{
+			touch_clear();
+			LCD_bmp("humiture.bmp");
+			if(iSocketClient!=0)
+			{
+				strcpy(sendBuf,DHT11);
+				ret = send(iSocketClient,sendBuf,999,0);
+				if(ret<=0)
+					 { perror("send"); break; }
+				printf("发送：%s\n",sendBuf);
+				while(strcmp(getmcubuffer,OK)== 0)
+				{
+					
+				}
+				font_test(130,180,50,getmcubuffer);
+				
+				while(1)
+				{
+				if(800<event.iX&& event.iX<1024 && 500<event.iY && event.iY<600)//退出
+				{
+					touch_clear();
+					LCD_bmp("main.bmp");//主界面
+					break;
+				}
+				}
+			}
 		}
 		
 	}
 }
+
+
+
+int touch_clear()
+{
+	event.iX = 0;
+	event.iY = 0;
+}
+

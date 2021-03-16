@@ -4,7 +4,7 @@
 #include <semaphore.h>
 #include <string.h>
 
-#include <input_manager.h>
+#include "input_manager.h"
 
 static PInputDevice g_InputDevs  = NULL;
 

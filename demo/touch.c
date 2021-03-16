@@ -13,7 +13,7 @@
 #include <sys/ioctl.h>
 #include <tslib.h>
 
-#include <input_manager.h>
+#include "input_manager.h"
 
 
 static struct tsdev *g_ts;

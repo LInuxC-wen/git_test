@@ -1,4 +1,4 @@
-#include <input_manager.h>
+#include "input_manager.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 
@@ -17,6 +17,7 @@
 
 int g_iSocketServer;
 int iSocketClient;
+char getmcubuffer[1000];
 
 static int NetinputGetInputEvent(PInputEvent ptInputEvent)
 {
@@ -28,22 +29,26 @@ static int NetinputGetInputEvent(PInputEvent ptInputEvent)
 	
 	iSocketClient = accept(g_iSocketServer, (struct sockaddr *)&tSocketClientAddr, &iAddrLen);
 	//iRecvLen = recvfrom(g_iSocketServer, aRecvBuf, 999, 0, (struct sockaddr *)&tSocketClientAddr, &iAddrLen);
+	
+	while(1)
+	{
 	iRecvLen = recv(iSocketClient, aRecvBuf, 999, 0);
 	
 	if (iRecvLen > 0)
 	{
 		aRecvBuf[iRecvLen] = '\0';
 		printf("Get Msg From %s : %s\n", inet_ntoa(tSocketClientAddr.sin_addr), aRecvBuf);
+		strcpy(getmcubuffer,aRecvBuf);
 		
 		ptInputEvent->iType 	= INPUT_TYPE_NET;
 		gettimeofday(&ptInputEvent->tTime, NULL);
 		
 		strncpy(ptInputEvent->str, aRecvBuf, 1000);
 		ptInputEvent->str[999] = '\0';
-		return 0;
 	}
 	else
 		return -1;
+	}
 }
 
 static int NetinputDeviceInit(void)
