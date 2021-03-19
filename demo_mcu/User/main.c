@@ -23,6 +23,9 @@
 #include "bsp_dht11.h"
 #include "bsp_led.h"
 #include "bsp_dht11.h"
+#include "SMD_test.h" 
+#include "MicroStepDriver.h" 
+#include "bsp_exti.h" 
 
 /**
   * @brief  主函数
@@ -35,9 +38,12 @@ int main ( void )
   USARTx_Config ();                                                              //初始化串口1
 	SysTick_Init ();                                                               //配置 SysTick 为 1ms 中断一次 
 	ESP8266_Init ();                                                               //初始化WiFi模块使用的接口和外设
-  LED_GPIO_Config();																														 //初始化DTT11的引脚
-	DHT11_Init ();
+  LED_GPIO_Config();																														 //初始化LED
+	DHT11_Init ();																																	//初始化DTT11
+	SMD_Init();																																			//初始化电机
+	EXTI_Key_Config();																															//按键中断初始化
 	printf ( "\r\n野火 WF-ESP8266 WiFi模块测试例程\r\n" );                          //打印测试例程提示信息
+	
 
 	
   ESP8266_StaTcpClient_UnvarnishTest ();

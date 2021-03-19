@@ -19,3 +19,7 @@
 ..\..\output\main.o: ..\..\User\Test\test.h
 ..\..\output\main.o: ..\..\User\dht11\bsp_dht11.h
 ..\..\output\main.o: ..\..\User\led\bsp_led.h
+..\..\output\main.o: ..\..\User\SMD\SMD_test.h
+..\..\output\main.o: ..\..\User\SMD\MicroStepDriver.h
+..\..\output\main.o: ..\..\User\Key\bsp_exti.h
+..\..\output\main.o: ..\..\Libraries\FWlib\inc\stm32f10x_exti.h

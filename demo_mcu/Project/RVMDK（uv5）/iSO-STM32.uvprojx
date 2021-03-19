@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\gpio;..\..\User\SysTick;..\..\User\usart;..\..\User\Common;..\..\User\ESP8266;..\..\User\Test;..\..\User\dht11;..\..\User\led</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\gpio;..\..\User\SysTick;..\..\User\usart;..\..\User\Common;..\..\User\ESP8266;..\..\User\Test;..\..\User\dht11;..\..\User\led;..\..\User\SMD;..\..\User\Key</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -599,6 +599,21 @@
               <FileName>bsp_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\led\bsp_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>MicroStepDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\SMD\MicroStepDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>SMD_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\SMD\SMD_test.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Key\bsp_exti.c</FilePath>
             </File>
           </Files>
         </Group>

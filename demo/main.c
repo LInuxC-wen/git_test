@@ -150,6 +150,64 @@ int main (void)
 			}
 		}
 		
+		else if(520<event.iX&& event.iX<800 && 210<event.iY && event.iY<330)//电机控制
+		{
+			touch_clear();
+			LCD_bmp("motor.bmp");
+			if(iSocketClient[0]!=0)
+			{
+				strcpy(sendBuf,STEPPING_MOTOR);
+				ret = send(iSocketClient[0],sendBuf,999,0);
+				if(ret<=0)
+					 { perror("send"); break; }
+				printf("发送：%s\n",sendBuf);
+			}
+		printf("stepping_motor_control\n");
+		
+			while(1)
+				{
+					touch_clear();
+					if(120<event.iX&& event.iX<445 && 160<event.iY && event.iY<320)//窗帘开
+					{
+					touch_clear();
+					
+					strcpy(sendBuf,CURTAIN_on);
+					ret = send(iSocketClient[0],sendBuf,999,0);
+					if(ret<=0)
+						{ perror("send"); break; }
+					
+					printf("发送：%s\n",sendBuf);
+					while(strcmp(getmcubuffer,OK)!= 0){}
+					}
+					
+					else if(560<event.iX&& event.iX<900 && 160<event.iY && event.iY<320)//窗帘关
+					{
+					touch_clear();
+					
+					strcpy(sendBuf,CURTAIN_off);
+					ret = send(iSocketClient[0],sendBuf,999,0);
+					if(ret<=0)
+						{ perror("send"); break; }
+					
+					printf("发送：%s\n",sendBuf);
+					while(strcmp(getmcubuffer,OK)!= 0){}
+					}
+					
+					else if(800<event.iX&& event.iX<1024 && 500<event.iY && event.iY<600)//退出
+					{
+					touch_clear();
+					
+					strcpy(sendBuf,STEPPING_MOTOR_EXIT);
+					ret = send(iSocketClient[0],sendBuf,999,0);
+					if(ret<=0)
+						{ perror("send"); break; }
+					
+					printf("发送：%s\n",sendBuf);
+					LCD_bmp("main.bmp");//主界面
+					break;
+					}
+				}
+		}
 	}
 }
 

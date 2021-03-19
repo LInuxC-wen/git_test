@@ -9,7 +9,7 @@
 
 /********************************** 用户需要设置的参数**********************************/
 #define      macUser_ESP8266_ApSsid                       "wen"                //要连接的热点的名称
-#define      macUser_ESP8266_ApPwd                        "12345678"           //要连接的热点的密钥
+#define      macUser_ESP8266_ApPwd                        "19990809"           //要连接的热点的密钥
 
 #define      macUser_ESP8266_TcpServer_IP                 "172.20.10.14"      //要连接的服务器的 IP
 #define      macUser_ESP8266_TcpServer_Port               "8888"               //要连接的服务器的端口

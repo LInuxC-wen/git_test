@@ -19,3 +19,5 @@
 ..\..\output\test.o: E:\STM 32\Keil5\ARM\ARMCC\Bin\..\include\string.h
 ..\..\output\test.o: ..\..\User\dht11\bsp_dht11.h
 ..\..\output\test.o: ..\..\User\led\bsp_led.h
+..\..\output\test.o: ..\..\User\SMD\SMD_test.h
+..\..\output\test.o: ..\..\User\SMD\MicroStepDriver.h
