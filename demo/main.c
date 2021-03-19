@@ -22,7 +22,7 @@
 
 static InputEvent event;
 extern int g_iSocketServer;//与MCU通信的服务端句柄
-extern int iSocketClient;//与MCU通信的客户端句柄
+extern int iSocketClient[4];//与MCU通信的客户端句柄
 extern char getmcubuffer[1000];//与MCU通信收到的信息
 int touch_clear();//触摸屏数据初始化
 
@@ -81,10 +81,10 @@ int main (void)
 		if(50<event.iX&& event.iX<360 && 70<event.iY && event.iY<180)//LED灯开
 		{
 			touch_clear();
-			if(iSocketClient!=0)
+			if(iSocketClient[0]!=0)
 			{
 				strcpy(sendBuf,LED_on);
-				ret = send(iSocketClient,sendBuf,999,0);
+				ret = send(iSocketClient[0],sendBuf,999,0);
 				if(ret<=0)
 					 { perror("send"); break; }
 				 printf("发送：%s\n",sendBuf);
@@ -94,10 +94,10 @@ int main (void)
 		else if(50<event.iX&& event.iX<360 && 210<event.iY && event.iY<320)//LED灯关
 		{
 			touch_clear();
-			if(iSocketClient!=0)
+			if(iSocketClient[0]!=0)
 			{
 				strcpy(sendBuf,LED_off);
-				ret = send(iSocketClient,sendBuf,999,0);
+				ret = send(iSocketClient[0],sendBuf,999,0);
 				if(ret<=0)
 					 { perror("send"); break; }
 				printf("发送：%s\n",sendBuf);
@@ -125,10 +125,10 @@ int main (void)
 		{
 			touch_clear();
 			LCD_bmp("humiture.bmp");
-			if(iSocketClient!=0)
+			if(iSocketClient[0]!=0)
 			{
 				strcpy(sendBuf,DHT11);
-				ret = send(iSocketClient,sendBuf,999,0);
+				ret = send(iSocketClient[0],sendBuf,999,0);
 				if(ret<=0)
 					 { perror("send"); break; }
 				printf("发送：%s\n",sendBuf);

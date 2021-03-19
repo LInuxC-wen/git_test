@@ -7,47 +7,76 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-
-/* socket
- * bind
- * sendto/recvfrom
- */
+#include <stdlib.h>
+#include <pthread.h>
 
 #define SERVER_PORT 8888
 
-int g_iSocketServer;
-int iSocketClient;
-char getmcubuffer[1000];
+typedef struct protocol{
+	int tmp_iSocketClient;
+	char ClientAddr[1000];
+}TMP;
 
-static int NetinputGetInputEvent(PInputEvent ptInputEvent)
+int g_iSocketServer;
+int iSocketClient[4];
+char getmcubuffer[1000];
+void *func(void *tmp);
+
+void *func(void *tmp)
 {
-	struct sockaddr_in tSocketClientAddr;
 	int iRecvLen;
+	int sockfd;
 	char aRecvBuf[1000];
+	char tSocketClientAddr[1000];
+	TMP *tmp1 = (TMP *)tmp;
 	
-	unsigned int iAddrLen = sizeof(struct sockaddr);
-	
-	iSocketClient = accept(g_iSocketServer, (struct sockaddr *)&tSocketClientAddr, &iAddrLen);
-	//iRecvLen = recvfrom(g_iSocketServer, aRecvBuf, 999, 0, (struct sockaddr *)&tSocketClientAddr, &iAddrLen);
+	sockfd = tmp1->tmp_iSocketClient;
+	strcpy(tSocketClientAddr,tmp1->ClientAddr);
+	free(tmp);	
 	
 	while(1)
 	{
-	iRecvLen = recv(iSocketClient, aRecvBuf, 999, 0);
+	iRecvLen = recv(sockfd, aRecvBuf, 999, 0);
 	
 	if (iRecvLen > 0)
 	{
 		aRecvBuf[iRecvLen] = '\0';
-		printf("Get Msg From %s : %s\n", inet_ntoa(tSocketClientAddr.sin_addr), aRecvBuf);
+		printf("Get Msg From %s : %s\n", tSocketClientAddr, aRecvBuf);
 		strcpy(getmcubuffer,aRecvBuf);
-		
-		ptInputEvent->iType 	= INPUT_TYPE_NET;
-		gettimeofday(&ptInputEvent->tTime, NULL);
-		
-		strncpy(ptInputEvent->str, aRecvBuf, 1000);
-		ptInputEvent->str[999] = '\0';
 	}
-	else
-		return -1;
+	else{
+		printf("接收来自ip:%s的信息失败\n",tSocketClientAddr);
+		printf("关闭来自ip:%s的socket\n",tSocketClientAddr);
+		close(sockfd);
+		break;
+		}
+	}
+	
+}
+
+static int NetinputGetInputEvent(PInputEvent ptInputEvent)
+{
+	struct sockaddr_in tSocketClientAddr;
+	int i=0;
+	unsigned int iAddrLen = sizeof(struct sockaddr);
+	pthread_t rcv;
+	
+	while(1)
+	{
+	while(i<=4)
+	{
+	iSocketClient[i] = accept(g_iSocketServer, (struct sockaddr *)&tSocketClientAddr, &iAddrLen);
+		printf("client:ip:%s   port:%d  \n",
+			inet_ntoa(tSocketClientAddr.sin_addr),tSocketClientAddr.sin_port);
+		
+		TMP *tmp = (TMP *)malloc(sizeof(TMP));
+		tmp->tmp_iSocketClient = iSocketClient[i];
+		strcpy(tmp->ClientAddr, inet_ntoa(tSocketClientAddr.sin_addr));
+		
+        	pthread_create(&rcv,NULL,func, (void*)tmp);	
+			
+		i++;
+	}
 	}
 }
 
